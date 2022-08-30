@@ -8,6 +8,43 @@
     <link href="./assets/app.css" rel="stylesheet">
     <script src="./assets/hls.js"></script>
     <style>
+	.bn39 {
+	  background-image: linear-gradient(135deg, #008aff, #86d472);
+	  border-radius: 6px;
+	  box-sizing: border-box;
+	  color: #ffffff;
+	  display: block;
+	  height: 50px;
+	  font-size: 1.4em;
+	  font-weight: 600;
+	  padding: 4px;
+	  position: absolute;
+	  text-decoration: none;
+	  width: 7em;
+	  z-index: 7;
+	  display: none;
+	}
+
+	.bn39:hover {
+	  color: #fff;
+	}
+
+	.bn39 .bn39span {
+	  align-items: center;
+	  background: #0e0e10;
+	  border-radius: 6px;
+	  display: flex;
+	  justify-content: center;
+	  height: 100%;
+	  transition: background 0.5s ease;
+	  width: 100%;
+	}
+
+	.bn39:hover .bn39span {
+	  background: transparent;
+	}
+    </style>
+    <style>
         /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
@@ -355,6 +392,7 @@
                 </div>
                 <span class="title title2"> Clique para ouvir </span>
             </div>
+	    <a id="comprar" class="bn39" href="/"><span class="bn39span">Compre agora</span></a>
             <div id="big_play" style="display: none;">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16 32">
                     <path d="M15.552 15.168q0.448 0.32 0.448 0.832 0 0.448-0.448 0.768l-13.696 8.512q-0.768 0.512-1.312 0.192t-0.544-1.28v-16.448q0-0.96 0.544-1.28t1.312 0.192z"></path>
@@ -375,6 +413,18 @@
         const urlParams = new URLSearchParams(window.location.search);
         const vid = urlParams.get('id');
         var interval;
+	    
+        video.addEventListener('timeupdate', (event) => {
+	  //console.log('olha....' + plr.currentTime)  
+	  //if(video.currentTime >= 472 && video.currentTime <= 510) {
+	  if(video.currentTime >= 14 && video.currentTime <= 25) {
+	    document.getElementById('comprar').style.display = 'block'
+	    document.getElementById('comprar').style.zIndex = 7
+	  } else {
+	    document.getElementById('comprar').style.display = 'none'
+	    document.getElementById('comprar').style.zIndex = -1
+	  }
+	});
         /*
 	if(localStorage.getItem("uid")){
             var uid = localStorage.getItem("uid");
