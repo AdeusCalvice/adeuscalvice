@@ -375,12 +375,14 @@
         const urlParams = new URLSearchParams(window.location.search);
         const vid = urlParams.get('id');
         var interval;
-        if(localStorage.getItem("uid")){
+        /*
+	if(localStorage.getItem("uid")){
             var uid = localStorage.getItem("uid");
         }else{
             localStorage.setItem("uid", "e2b7883e-1024-46c0-b3c9-f308586b55b9");
             var uid = "e2b7883e-1024-46c0-b3c9-f308586b55b9";
-        }
+        }*/
+	var uid = null;
         function currentRunning(){
                 interval = setInterval(function(){
                     $.ajax({
