@@ -1,0 +1,557 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="charset" content="UTF-8">
+    <meta name="lang" content="pt_br">
+    <meta name="title" content="Player de Conversão">
+    <meta name="author" content="Felipe Marinho">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="./assets/jquery.min.js"></script>
+    <link href="./assets/app.css" rel="stylesheet">
+    <script src="./assets/hls.js"></script>
+    <style>
+        /* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+        html,
+        body,
+        div,
+        span,
+        applet,
+        object,
+        iframe,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        blockquote,
+        pre,
+        a,
+        abbr,
+        acronym,
+        address,
+        big,
+        cite,
+        code,
+        del,
+        dfn,
+        em,
+        img,
+        ins,
+        kbd,
+        q,
+        s,
+        samp,
+        small,
+        strike,
+        strong,
+        sub,
+        sup,
+        tt,
+        var,
+        b,
+        u,
+        i,
+        center,
+        dl,
+        dt,
+        dd,
+        ol,
+        ul,
+        li,
+        fieldset,
+        form,
+        label,
+        legend,
+        table,
+        caption,
+        tbody,
+        tfoot,
+        thead,
+        tr,
+        th,
+        td,
+        article,
+        aside,
+        canvas,
+        details,
+        embed,
+        figure,
+        figcaption,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        output,
+        ruby,
+        section,
+        summary,
+        time,
+        mark,
+        audio,
+        video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+
+        /* HTML5 display-role reset for older browsers */
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section {
+            display: block;
+        }
+
+        body {
+            line-height: 1;
+        }
+
+        ol,
+        ul {
+            list-style: none;
+        }
+
+        blockquote,
+        q {
+            quotes: none;
+        }
+
+        blockquote:before,
+        blockquote:after,
+        q:before,
+        q:after {
+            content: '';
+            content: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        #content_video {
+            width: 100vw;
+            height: auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        video {
+            width: 100%;
+            z-index: 1;
+        }
+
+        #t_start,
+        #t_pause,
+        #t_end {
+            display: none;
+            position: absolute;
+            width: 100vw;
+            height: 57vw;
+            z-index: 3;
+        }
+
+        img {
+            display: block;
+            position: absolute;
+            width: 100vw;
+            height: 57vw;
+            z-index: 3;
+        }
+
+        #big_play,
+        #big_replay {
+            display: none;
+            position: absolute;
+            z-index: 4;
+            width: 15%;
+            height: 28%;
+            padding-left: 2.5%;
+            box-shadow: 0px 0px 20px 1px black;
+            background-color:  #ffffff ;
+            border-radius: 100%;
+            border: solid 1px  #ff0000 ;
+        }
+
+        #big_play svg {
+            width: 100%;
+            height: 100%;
+            fill:  #ff0000 ;
+        }
+
+        #big_replay svg {
+            width: 100%;
+            height: 100%;
+            fill:  #ff0000 ;
+        }
+
+        #smart_play {
+            z-index: 4;
+            flex-wrap: wrap;
+            width: 60%;
+            height: 60%;
+            display: none;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            border: solid 2px  #ffffff ;
+            position: absolute;
+            background-color:  #ff0000 ;
+        }
+
+        .title {
+            color:  #ffffff ;
+            position: relative;
+            text-align: center;
+            font-size: 5vw;
+            font-weight: bold;
+            font-family: arial;
+        }
+
+        .title1 {
+            margin-bottom: 10%;
+        }
+
+        .title2 {
+            margin-top: 10%;
+        }
+
+        .audio {
+            position: absolute;
+        }
+
+        .audio svg {
+            width: 15vw;
+        }
+
+        @-webkit-keyframes BLINK {
+            0% {
+                opacity: 0;
+            }
+
+            33% {
+                opacity: 1;
+            }
+
+            66% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes  BLINK {
+            0% {
+                opacity: 0;
+            }
+
+            33% {
+                opacity: 1;
+            }
+
+            66% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .audio .blink_1 {
+            -webkit-animation: BLINK 2s infinite;
+            animation: BLINK 2s infinite;
+            opacity: 0;
+        }
+
+        .audio .blink_2 {
+            -webkit-animation: BLINK 2s infinite .3s;
+            animation: BLINK 2s infinite .3s;
+            opacity: 0;
+        }
+
+        .audio .blink_3 {
+            -webkit-animation: BLINK 2s infinite .6s;
+            animation: BLINK 2s infinite .6s;
+            opacity: 0;
+        }
+
+        .audio .smartplay-svg-color {
+            fill:  #ffffff   !important;
+        }
+
+        .audio .adjustable {
+            border: 4px solid red;
+        }
+
+        #fake_bar {
+            display: none;
+            margin-top: -20px  ;
+            top: 100%;
+            left: 0;
+            z-index: 1;
+            animation-fill-mode: both;
+            position: relative;
+            height: 50px  ;
+
+            background-color:  #ff0000 ;
+        }
+
+        @keyframes  progressBar {
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="./assets/app.js"></script>
+</head>
+
+<body>
+    <content>
+        <div id="content_video">
+                                    <div id="t_pause" style="display: none;"><img src="./assets/thumb-pause.png" no-repeat=""></div>
+                                    <div id="smart_play" style="display: none;">
+                <span class="title title1"> Seu vídeo já começou </span>
+                <div class="title audio">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="7.999 9.062 46.75 32.563" enable-background="new 7.999 9.062 46.75 32.563" xml:space="preserve">
+                        <g class="adjustable fg">
+                            <path class="smartplay-svg-color" d="M53.249,39.616c-0.186,0-0.371-0.051-0.537-0.157l-43.5-27.75c-0.466-0.297-0.603-0.916-0.306-1.381c0.298-0.466,0.917-0.601,1.381-0.306l43.5,27.75c0.467,0.297,0.604,0.916,0.307,1.381C53.901,39.453,53.579,39.616,53.249,39.616z"></path>
+                            <path class="blink_3 smartplay-svg-color" d="M48.896,33.467l1.699,1.085c3.497-7.791,2.073-17.271-4.313-23.659c-0.391-0.391-1.023-0.391-1.414,0s-0.391,1.023,0,1.414C50.581,18.019,51.913,26.463,48.896,33.467z"></path>
+                            <path class="blink_3 smartplay-svg-color" d="M46.926,36.956c-0.612,0.863-1.286,1.695-2.059,2.469c-0.392,0.391-0.392,1.023,0,1.414c0.194,0.195,0.45,0.293,0.707,0.293c0.256,0,0.512-0.098,0.706-0.293c0.878-0.878,1.642-1.824,2.333-2.807L46.926,36.956z"></path>
+                            <path class="blink_2 smartplay-svg-color" d="M42.543,29.415l1.777,1.135c1.545-5.315,0.229-11.293-3.953-15.476c-0.392-0.391-1.023-0.391-1.414,0c-0.392,0.391-0.392,1.023,0,1.414C42.454,19.987,43.639,24.925,42.543,29.415z"></path>
+                            <path class="blink_2 smartplay-svg-color" d="M41,33.174c-0.563,0.94-1.235,1.837-2.047,2.646c-0.391,0.392-0.391,1.023,0,1.414c0.195,0.195,0.451,0.293,0.707,0.293s0.512-0.098,0.707-0.293c0.916-0.914,1.676-1.924,2.317-2.984L41,33.174z"></path>
+                            <path class="blink_1 smartplay-svg-color" d="M35.771,25.094l2.003,1.277c0.012-0.203,0.029-0.404,0.029-0.609c0-3.079-1.2-5.974-3.381-8.153c-0.391-0.391-1.022-0.391-1.414,0c-0.391,0.391-0.391,1.023,0,1.414C34.652,20.666,35.613,22.802,35.771,25.094z"></path>
+                            <path class="blink_1 smartplay-svg-color" d="M35.084,29.401c-0.474,1.145-1.172,2.197-2.076,3.1c-0.391,0.391-0.391,1.023,0,1.414c0.195,0.195,0.451,0.293,0.707,0.293c0.257,0,0.513-0.098,0.707-0.293c1.008-1.006,1.795-2.17,2.361-3.43L35.084,29.401z"></path>
+                            <polygon class="smartplay-svg-color" points="28.124,20.215 28.124,14.991 24.635,17.99  "></polygon>
+                            <path class="smartplay-svg-color" d="M20.921,20.366h-6.423c-0.553,0-1,0.508-1,1.135v8.229c0,0.627,0.447,1.135,1,1.135h7.375l6.25,5.875V24.96L20.921,20.366z"></path>
+                        </g>
+                    </svg>
+                </div>
+                <span class="title title2"> Clique para ouvir </span>
+            </div>
+            <div id="big_play" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16 32">
+                    <path d="M15.552 15.168q0.448 0.32 0.448 0.832 0 0.448-0.448 0.768l-13.696 8.512q-0.768 0.512-1.312 0.192t-0.544-1.28v-16.448q0-0.96 0.544-1.28t1.312 0.192z"></path>
+                </svg>
+            </div>
+            <div id="big_replay">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16 32">
+                    <path d="M15.552 15.168q0.448 0.32 0.448 0.832 0 0.448-0.448 0.768l-13.696 8.512q-0.768 0.512-1.312 0.192t-0.544-1.28v-16.448q0-0.96 0.544-1.28t1.312 0.192z"></path>
+                </svg>
+            </div>
+            <video id="player" playsinline="" src="">
+            </video>
+        </div>
+                <div id="fake_bar" style="animation: 471.3s cubic-bezier(0, 0.77, 0.51, 0.85) 0s 1 normal none paused progressBar; display: block;"></div>
+            </content>
+    <script>
+        var video = document.getElementById('player');
+        const urlParams = new URLSearchParams(window.location.search);
+        const vid = urlParams.get('id');
+        var interval;
+        if(localStorage.getItem("uid")){
+            var uid = localStorage.getItem("uid");
+        }else{
+            localStorage.setItem("uid", "e2b7883e-1024-46c0-b3c9-f308586b55b9");
+            var uid = "e2b7883e-1024-46c0-b3c9-f308586b55b9";
+        }
+        function currentRunning(){
+                interval = setInterval(function(){
+                    $.ajax({
+                        url: "https://playerdeconversao.com/api/analytics/video/send",
+                        data: {
+                            uid: uid,
+                            vid: vid,
+                            event_type: 'running',
+                            current_position: $('#player').get(0).currentTime,
+                            duration: $('#player').get(0).duration
+                        }
+                    }); 
+                },30000);
+        }
+                $("#smart_play").on('click', function() {
+        $.getJSON("https://ipinfo.io").done(function(data){
+            $.ajax({
+                url: "https://playerdeconversao.com/api/analytics/video/send",
+                data: {
+                    uid: uid,
+                    vid: vid,
+                    event_type: 'started',
+                    current_position: $('#player').get(0).currentTime,
+                    duration: $('#player').get(0).duration,
+                    ip: data.ip,
+                    city: data.city,
+                    region: data.region,
+                    country: data.country
+                }
+            });
+        });
+            currentRunning();
+        });
+                $("#big_play").on("click", function(){
+        $.getJSON("https://ipinfo.io").done(function(data){
+            $.ajax({
+                url: "https://playerdeconversao.com/api/analytics/video/send",
+                data: {
+                    uid: uid,
+                    vid: vid,
+                    event_type: 'started',
+                    current_position: $('#player').get(0).currentTime,
+                    duration: $('#player').get(0).duration,
+                    ip: data.ip,
+                    city: data.city,
+                    region: data.region,
+                    country: data.country
+                }
+            });
+        }); 
+            currentRunning();
+        });
+        $("#big_replay").on("click", function(){
+            $.ajax({
+                url: "https://playerdeconversao.com/api/analytics/video/send",
+                data: {
+                    uid: uid,
+                    vid: vid,
+                    event_type: 'restart',
+                    current_position: $('#player').get(0).currentTime,
+                    duration: $('#player').get(0).duration
+                }
+            }); 
+            currentRunning();
+        });
+        $("#player").on("pause", function(){
+            $.ajax({
+                url: "https://playerdeconversao.com/api/analytics/video/send",
+                data: {
+                    uid: uid,
+                    vid: vid,
+                    event_type: 'paused',
+                    current_position: $('#player').get(0).currentTime,
+                    duration: $('#player').get(0).duration
+                }
+            });
+            clearInterval(interval);
+        });
+        $("#player").on("ended", function(){
+            $.ajax({
+                url: "https://playerdeconversao.com/api/analytics/video/send",
+                data: {
+                    uid: uid,
+                    vid: vid,
+                    event_type: 'ended',
+                    current_position: $('#player').get(0).currentTime,
+                    duration: $('#player').get(0).duration
+                }
+            });
+            clearInterval(interval);
+        });
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (userAgent.match(/ios/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPad/i) || userAgent.match(/iPod/i)) {
+            $('#player').attr("autoplay", "");
+        }
+		var link = '/vsl.m3u8';
+        if (Hls.isSupported()) {
+            var hls = new Hls({
+                debug: true,
+            });
+            //hls.loadSource('https://vz-2afeae25-b4f.b-cdn.net/2c8cfdec-f430-4921-9844-fb30fb337cb2/playlist.m3u8');
+			hls.loadSource(link);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            //video.src = 'https://vz-2afeae25-b4f.b-cdn.net/2c8cfdec-f430-4921-9844-fb30fb337cb2/playlist.m3u8';
+			video.src = link;
+        }
+        $('#player').on('ended', function() {
+            if ($('#smart_play').is(":hidden")) {
+                                $('#fake_bar').hide();
+                $('#big_replay').show();
+            } else {
+                $('#player').get(0).play();
+            }
+        });
+                $("#player").on('loadeddata', function() {
+            $('#smart_play').css("display", "flex");
+                        $('#fake_bar').hide();
+                        $('#player').get(0).muted = true;
+            $('#player').get(0).volume = 0;
+            $('#player').get(0).play();
+
+        });
+        $("#smart_play").on("click", function() {
+            var duration = $('#player').get(0).duration + 's';
+                        $('#fake_bar').css("animation", "progressBar " + duration + " cubic-bezier(0, 0.77, 0.51, 0.85)");
+            $('#fake_bar').show();
+                        $('#player').removeAttr("loop");
+            $('#smart_play').hide();
+            $('#player').get(0).currentTime = 0;
+            $('#player').get(0).muted = false;
+            $('#player').get(0).volume = 1;
+            $('#player').get(0).play();
+        });
+                        $('#big_play').on('click', function() {
+            var duration = $('#player').get(0).duration + 's';
+                        $('#fake_bar').show();
+            $('#fake_bar').css("animation", "progressBar " + duration + " cubic-bezier(0, 0.77, 0.51, 0.85)");
+                        $('#t_start').hide();
+            $('#big_play').hide();
+            $('#t_pause').hide();
+            $('#player').get(0).muted = false;
+            $('#player').get(0).volume = 1;
+            $('#player').get(0).play();
+        });
+
+        $('#player').on('click', function() {
+            if ($('#player').get(0).paused == false) {
+                if ($('#smart_play').is(":hidden")) {
+                    $('#player').get(0).pause();
+                                        $('#fake_bar').css("animationPlayState", "paused");
+                                                            $('#t_pause').show();
+                                        $('#big_play').show();
+                }
+            }
+        });
+
+        $('#big_replay').on('click', function() {
+            $('#t_end').hide();
+            $('#big_replay').hide();
+                        $('#fake_bar').show();
+                        $('#player').get(0).currentTime = 0;
+            $('#player').get(0).muted = false;
+            $('#player').get(0).volume = 1;
+            $('#player').get(0).play();
+        });
+        $('#player').on('pause', function() {
+                        $('t_pause').show();
+                        $('big_play').show();
+        });
+            </script>
+
+
+</body></html>
